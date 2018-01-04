@@ -1,5 +1,6 @@
 from Homework6Regularization import getRawData, LinearRegression, nonLinearTransform, getTestError, getPredictions
 import numpy as np
+from random import randint
 from LinearRegression import get_target_function
 
 trainingPercent = 25 / 35
@@ -120,6 +121,57 @@ def problem7():
         constantErrors.append((np.mean(constantRoError), ro, roIndex))
         linearErrors.append((np.mean(linearRoError), ro, roIndex))
     return constantErrors, linearErrors
+
+def extractPts(inputs):
+    """extract input values for (x, y) points into 'input' (1, x) and a target (y)"""
+    x = []
+    y = []
+    for input in inputs:
+        x.append((1, inputs[0]))
+        y.append(inputs[2])
+    return x, y
+
+
+def getPredictions(weights, inputs):
+    """get list of predictions"""
+    predictions = []
+    for input in inputs:
+        predictions.append(np.sign(np.dot(weights, input)))
+    return predictions
+
+def getRandomPt(points):
+    """helper function that gets a random (x, y) point from the argument"""
+    randomIndex = randint(0, len(points) - 1)
+    return points[randomIndex]
+
+def PLA(inputPts):
+    """implmentation of the simple perception learning algorithm. Picks a randomly misclassified point and updates the
+    weights according to the equation found on pg 7 of the Learning From Data textbook (w(t+1) = w(t) + y(t)*x(t)"""
+    def findMisclassfied(weights, xy, inputPts, targets):
+        """helper functions that takes in weights and uses the current weight vector to make predictions to compare
+        to the target values. Then outputs a list of points that are misclassified
+        xy - the actual (x, y) points
+        inputPts - the input points for the linear model ie (1, x) - 1 being the bias term
+        targets - the y values for the (x, y) points"""
+        predictions = getPredictions(weights, inputPts)
+        assert len(predictions) == len(targets)
+        misclassifiedPts = []
+        for index, predict in enumerate(predictions):
+            if predict != targets[index]:
+                misclassifiedPts.append(xy[index])
+        return misclassifiedPts
+
+    weights = np.array([0, 0])
+    inputX, inputY = extractPts(inputPts)
+    wrongPts = findMisclassfied(weights, inputPts, inputX, inputY)
+    while len(wrongPts) == 0:
+        randomWrongPt = getRandomPt(wrongPts)
+        weights += weights + randomWrongPt[1]*np.array([1, randomWrongPt[0]])
+    return weights
+
+def createDataSet(N=10):
+    """helper that returns points (x, y, target) for some random target functiont that is created"""
+
 
 constant, linear = problem7()
 print(constant)
