@@ -7,7 +7,7 @@ import random
 
 class SVMclassifier:
     """make SVM classifier object. leverages sklearn SVC object. Helper class to make working with SVM simpler"""
-    def __init__(self, X, Y, C=.01, Q=2, kernel='poly'):
+    def __init__(self, X, Y, C=.01, Q=2, kernel='poly', gamma=1):
         self._hypothesis = svm.SVC(C=C, kernel=kernel, degree=Q, gamma=1, coef0=1)
         self._hypothesis.fit(X, Y)
 
@@ -102,142 +102,143 @@ def getRawData():
     trainTarget = rawTrainData[:, [0]]
     return testInput, testTarget, trainInput, trainTarget
 
-testInput, testTargetRaw, trainInput, trainTargetRaw = getRawData()
-# changing the labels to still fit the SVM binary classification defaults but now just label all positive labels as the
-# number we want to label and all other labels as negative labels
-zeroTarget = oneVersusMany(trainTargetRaw, 0)
-twoTarget = oneVersusMany(trainTargetRaw, 2)
-fourTarget = oneVersusMany(trainTargetRaw, 4)
-sixTarget = oneVersusMany(trainTargetRaw, 6)
-eightTarget = oneVersusMany(trainTargetRaw, 8)
+if __name__ == '__main__':
+    testInput, testTargetRaw, trainInput, trainTargetRaw = getRawData()
+    # changing the labels to still fit the SVM binary classification defaults but now just label all positive labels as the
+    # number we want to label and all other labels as negative labels
+    zeroTarget = oneVersusMany(trainTargetRaw, 0)
+    twoTarget = oneVersusMany(trainTargetRaw, 2)
+    fourTarget = oneVersusMany(trainTargetRaw, 4)
+    sixTarget = oneVersusMany(trainTargetRaw, 6)
+    eightTarget = oneVersusMany(trainTargetRaw, 8)
 
-# below prints out the possible choices to problem 2. See that the zeroSVM error is the highest
-zeroSVM = SVMclassifier(trainInput, zeroTarget)
-twoSVM = SVMclassifier(trainInput, twoTarget)
-fourSVM = SVMclassifier(trainInput, fourTarget)
-sixSVM = SVMclassifier(trainInput, sixTarget)
-eightSVM = SVMclassifier(trainInput, eightTarget)
-print("problem 2 in sample errors")
-print(zeroSVM.getError(trainInput, zeroTarget))
-print(twoSVM.getError(trainInput, twoTarget))
-print(fourSVM.getError(trainInput, fourTarget))
-print(sixSVM.getError(trainInput, sixTarget))
-print(eightSVM.getError(trainInput, eightTarget))
+    # below prints out the possible choices to problem 2. See that the zeroSVM error is the highest
+    zeroSVM = SVMclassifier(trainInput, zeroTarget)
+    twoSVM = SVMclassifier(trainInput, twoTarget)
+    fourSVM = SVMclassifier(trainInput, fourTarget)
+    sixSVM = SVMclassifier(trainInput, sixTarget)
+    eightSVM = SVMclassifier(trainInput, eightTarget)
+    print("problem 2 in sample errors")
+    print(zeroSVM.getError(trainInput, zeroTarget))
+    print(twoSVM.getError(trainInput, twoTarget))
+    print(fourSVM.getError(trainInput, fourTarget))
+    print(sixSVM.getError(trainInput, sixTarget))
+    print(eightSVM.getError(trainInput, eightTarget))
 
-print("\nproblem 3 in sample errors")
-oneTarget = oneVersusMany(trainTargetRaw, 1)
-threeTarget = oneVersusMany(trainTargetRaw, 3)
-fiveTarget = oneVersusMany(trainTargetRaw, 5)
-sevenTarget = oneVersusMany(trainTargetRaw, 7)
-nineTarget = oneVersusMany(trainTargetRaw, 9)
-oneSVM = SVMclassifier(trainInput, oneTarget)
-threeSVM = SVMclassifier(trainInput, threeTarget)
-fiveSVM = SVMclassifier(trainInput, fiveTarget)
-sevenSVM = SVMclassifier(trainInput, sevenTarget)
-nineSVM = SVMclassifier(trainInput, nineTarget)
-print(oneSVM.getError(trainInput, oneTarget))
-print(threeSVM.getError(trainInput, threeTarget))
-print(fiveSVM.getError(trainInput, fiveTarget))
-print(sevenSVM.getError(trainInput, sevenTarget))
-print(nineSVM.getError(trainInput, nineTarget))
+    print("\nproblem 3 in sample errors")
+    oneTarget = oneVersusMany(trainTargetRaw, 1)
+    threeTarget = oneVersusMany(trainTargetRaw, 3)
+    fiveTarget = oneVersusMany(trainTargetRaw, 5)
+    sevenTarget = oneVersusMany(trainTargetRaw, 7)
+    nineTarget = oneVersusMany(trainTargetRaw, 9)
+    oneSVM = SVMclassifier(trainInput, oneTarget)
+    threeSVM = SVMclassifier(trainInput, threeTarget)
+    fiveSVM = SVMclassifier(trainInput, fiveTarget)
+    sevenSVM = SVMclassifier(trainInput, sevenTarget)
+    nineSVM = SVMclassifier(trainInput, nineTarget)
+    print(oneSVM.getError(trainInput, oneTarget))
+    print(threeSVM.getError(trainInput, threeTarget))
+    print(fiveSVM.getError(trainInput, fiveTarget))
+    print(sevenSVM.getError(trainInput, sevenTarget))
+    print(nineSVM.getError(trainInput, nineTarget))
 
-print("problem 4 # of support vectors")
-# note: to get the answer for problem 4. you take the sum of the 2 elements within each array and get the different
-# of that. Each number is the number of support vectors for each class (ie only 2 classes because we are doing binary)
-print(zeroSVM.getNumSupportVectors(), oneSVM.getNumSupportVectors())
+    print("problem 4 # of support vectors")
+    # note: to get the answer for problem 4. you take the sum of the 2 elements within each array and get the different
+    # of that. Each number is the number of support vectors for each class (ie only 2 classes because we are doing binary)
+    print(zeroSVM.getNumSupportVectors(), oneSVM.getNumSupportVectors())
 
-# problem 5 answer choices printed below
-oneVersusFiveInput, oneVersusFiveTarget = oneVersusOne(trainInput, trainTargetRaw, 1, 5)
-oneVersusFiveTestInput, oneVersusFiveTestTarget = oneVersusOne(testInput, testTargetRaw, 1, 5)
-oneVFiveSVM = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001)
-oneVFiveSVMa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01)
-oneVFiveSVMb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.1)
-oneVFiveSVMc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1)
-print("number of support vectors")
-print(oneVFiveSVM.getNumSupportVectors(), oneVFiveSVMa.getNumSupportVectors(), oneVFiveSVMb.getNumSupportVectors(),
-      oneVFiveSVMc.getNumSupportVectors())
-print("out of sample errors")
-print(oneVFiveSVM.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
-      oneVFiveSVMa.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
-      oneVFiveSVMb.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
-      oneVFiveSVMc.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
-print("in sample errors")
-print(oneVFiveSVM.getError(oneVersusFiveInput, oneVersusFiveTarget),
-      oneVFiveSVMa.getError(oneVersusFiveInput, oneVersusFiveTarget),
-      oneVFiveSVMb.getError(oneVersusFiveInput, oneVersusFiveTarget),
-      oneVFiveSVMc.getError(oneVersusFiveInput, oneVersusFiveTarget))
-#end of problem 5 anwer choices
+    # problem 5 answer choices printed below
+    oneVersusFiveInput, oneVersusFiveTarget = oneVersusOne(trainInput, trainTargetRaw, 1, 5)
+    oneVersusFiveTestInput, oneVersusFiveTestTarget = oneVersusOne(testInput, testTargetRaw, 1, 5)
+    oneVFiveSVM = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001)
+    oneVFiveSVMa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01)
+    oneVFiveSVMb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.1)
+    oneVFiveSVMc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1)
+    print("number of support vectors")
+    print(oneVFiveSVM.getNumSupportVectors(), oneVFiveSVMa.getNumSupportVectors(), oneVFiveSVMb.getNumSupportVectors(),
+          oneVFiveSVMc.getNumSupportVectors())
+    print("out of sample errors")
+    print(oneVFiveSVM.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
+          oneVFiveSVMa.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
+          oneVFiveSVMb.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
+          oneVFiveSVMc.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print("in sample errors")
+    print(oneVFiveSVM.getError(oneVersusFiveInput, oneVersusFiveTarget),
+          oneVFiveSVMa.getError(oneVersusFiveInput, oneVersusFiveTarget),
+          oneVFiveSVMb.getError(oneVersusFiveInput, oneVersusFiveTarget),
+          oneVFiveSVMc.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    #end of problem 5 anwer choices
 
-# problem 6 answer choices below
-oneVFiveSVM = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.0001, Q=2)
-oneVFiveSVMa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.0001, Q=5)
-print("in sample error comparison")
-print(oneVFiveSVM.getError(oneVersusFiveInput, oneVersusFiveTarget),
-      oneVFiveSVMa.getError(oneVersusFiveInput, oneVersusFiveTarget))
-oneVFiveSVMb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001, Q=2)
-oneVFiveSVMc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001, Q=5)
-print("number of support vectors comparison")
-print(oneVFiveSVMb.getNumSupportVectors(),
-      oneVFiveSVMc.getNumSupportVectors())
-oneVFiveSVMd = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, Q=2)
-oneVFiveSVMe = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, Q=5)
-print("in sample error comparison")
-print(oneVFiveSVMd.getError(oneVersusFiveInput, oneVersusFiveTarget),
-      oneVFiveSVMe.getError(oneVersusFiveInput, oneVersusFiveTarget))
-oneVFiveSVMf = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, Q=2)
-oneVFiveSVMg = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, Q=5)
-print("out of sample error comparison")
-print(oneVFiveSVMf.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
-      oneVFiveSVMg.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    # problem 6 answer choices below
+    oneVFiveSVM = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.0001, Q=2)
+    oneVFiveSVMa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.0001, Q=5)
+    print("in sample error comparison")
+    print(oneVFiveSVM.getError(oneVersusFiveInput, oneVersusFiveTarget),
+          oneVFiveSVMa.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    oneVFiveSVMb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001, Q=2)
+    oneVFiveSVMc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.001, Q=5)
+    print("number of support vectors comparison")
+    print(oneVFiveSVMb.getNumSupportVectors(),
+          oneVFiveSVMc.getNumSupportVectors())
+    oneVFiveSVMd = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, Q=2)
+    oneVFiveSVMe = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, Q=5)
+    print("in sample error comparison")
+    print(oneVFiveSVMd.getError(oneVersusFiveInput, oneVersusFiveTarget),
+          oneVFiveSVMe.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    oneVFiveSVMf = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, Q=2)
+    oneVFiveSVMg = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, Q=5)
+    print("out of sample error comparison")
+    print(oneVFiveSVMf.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget),
+          oneVFiveSVMg.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
 
-# end of problem 6 answer choices
-# print problem 7 answer choices
-oneVFiveSVMh = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.1, Q=2)
-# the 2 lists below correspond to increasing C values from lowest C to highest C
-SVMs = [oneVFiveSVM, oneVFiveSVMb, oneVFiveSVMd, oneVFiveSVMh, oneVFiveSVMf]
-modelCounts = [0, 0, 0, 0, 0]
-lowestCVs = []
-# an indices list to be shuffled each of the 100 runs to simulate randomized k-fold CV
-indices = [i for i in range(len(oneVersusFiveInput))]
-for _ in range(100):
-    errors = []
-    random.shuffle(indices)
-    for index, model in enumerate(SVMs):
-        oneVersusFiveInputShuffled = [oneVersusFiveInput[index] for index in indices]
-        oneVersusFiveTargetShuffled = [oneVersusFiveTarget[index] for index in indices]
-        CVerror = model.kFoldValidation(10, oneVersusFiveInputShuffled, oneVersusFiveTargetShuffled)
-        errors.append((CVerror, index))
-        # added the below because figured out that the best performing one (ie answer to 7) was when index = 1 ie
-        # the model when C=.001
-        if index == 1:
-            lowestCVs.append(CVerror)
-    errors.sort()
-    lowestCVerror = errors[0]
-    modelCounts[lowestCVerror[1]] += 1
+    # end of problem 6 answer choices
+    # print problem 7 answer choices
+    oneVFiveSVMh = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.1, Q=2)
+    # the 2 lists below correspond to increasing C values from lowest C to highest C
+    SVMs = [oneVFiveSVM, oneVFiveSVMb, oneVFiveSVMd, oneVFiveSVMh, oneVFiveSVMf]
+    modelCounts = [0, 0, 0, 0, 0]
+    lowestCVs = []
+    # an indices list to be shuffled each of the 100 runs to simulate randomized k-fold CV
+    indices = [i for i in range(len(oneVersusFiveInput))]
+    for _ in range(100):
+        errors = []
+        random.shuffle(indices)
+        for index, model in enumerate(SVMs):
+            oneVersusFiveInputShuffled = [oneVersusFiveInput[index] for index in indices]
+            oneVersusFiveTargetShuffled = [oneVersusFiveTarget[index] for index in indices]
+            CVerror = model.kFoldValidation(10, oneVersusFiveInputShuffled, oneVersusFiveTargetShuffled)
+            errors.append((CVerror, index))
+            # added the below because figured out that the best performing one (ie answer to 7) was when index = 1 ie
+            # the model when C=.001
+            if index == 1:
+                lowestCVs.append(CVerror)
+        errors.sort()
+        lowestCVerror = errors[0]
+        modelCounts[lowestCVerror[1]] += 1
 
-print("The counts of which model won via cross validation error",modelCounts)
+    print("The counts of which model won via cross validation error",modelCounts)
 
-#problem 8
-print("the value of the lowest CV error average", np.mean(lowestCVs))
+    #problem 8
+    print("the value of the lowest CV error average", np.mean(lowestCVs))
 
-#problem 9
-# rbf kernel SVMs
-oneVFiveSVMrbf = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, kernel='rbf')
-oneVFiveSVMrbfa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, kernel='rbf')
-oneVFiveSVMrbfb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=100, kernel='rbf')
-oneVFiveSVMrbfc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=10000, kernel='rbf')
-oneVFiveSVMrbfd = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1000000, kernel='rbf')
+    #problem 9
+    # rbf kernel SVMs
+    oneVFiveSVMrbf = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=.01, kernel='rbf')
+    oneVFiveSVMrbfa = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1, kernel='rbf')
+    oneVFiveSVMrbfb = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=100, kernel='rbf')
+    oneVFiveSVMrbfc = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=10000, kernel='rbf')
+    oneVFiveSVMrbfd = SVMclassifier(oneVersusFiveInput, oneVersusFiveTarget, C=1000000, kernel='rbf')
 
-print("in sample errors from lowest value of C to highest")
-print(oneVFiveSVMrbf.getError(oneVersusFiveInput, oneVersusFiveTarget))
-print(oneVFiveSVMrbfa.getError(oneVersusFiveInput, oneVersusFiveTarget))
-print(oneVFiveSVMrbfb.getError(oneVersusFiveInput, oneVersusFiveTarget))
-print(oneVFiveSVMrbfc.getError(oneVersusFiveInput, oneVersusFiveTarget))
-print(oneVFiveSVMrbfd.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    print("in sample errors from lowest value of C to highest")
+    print(oneVFiveSVMrbf.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    print(oneVFiveSVMrbfa.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    print(oneVFiveSVMrbfb.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    print(oneVFiveSVMrbfc.getError(oneVersusFiveInput, oneVersusFiveTarget))
+    print(oneVFiveSVMrbfd.getError(oneVersusFiveInput, oneVersusFiveTarget))
 
-print("out of sample errors from lowest value of C to highest")
-print(oneVFiveSVMrbf.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
-print(oneVFiveSVMrbfa.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
-print(oneVFiveSVMrbfb.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
-print(oneVFiveSVMrbfc.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
-print(oneVFiveSVMrbfd.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print("out of sample errors from lowest value of C to highest")
+    print(oneVFiveSVMrbf.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print(oneVFiveSVMrbfa.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print(oneVFiveSVMrbfb.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print(oneVFiveSVMrbfc.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
+    print(oneVFiveSVMrbfd.getError(oneVersusFiveTestInput, oneVersusFiveTestTarget))
